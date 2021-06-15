@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- salo-01 USB-->
+    <usb-device vendor-id="1478" product-id="36923" />
+    <!-- 0x10C4 / 0xEA60: CP210x UART Bridge -->
+    <usb-device vendor-id="4292" product-id="60000" />
+</resources>
