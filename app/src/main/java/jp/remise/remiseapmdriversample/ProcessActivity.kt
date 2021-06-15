@@ -1,5 +1,6 @@
 package jp.remise.remiseapmdriversample
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
@@ -9,6 +10,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.hoho.android.usbserial.driver.UsbSerialDriver
 import com.starmicronics.starioextension.ICommandBuilder
 import com.starmicronics.starioextension.StarIoExt
@@ -25,11 +28,13 @@ import jp.remise.remiseapmdriver.Result.CardTranCheckResult
 import jp.remise.remiseapmdriver.Result.EMoneyTranCheckResult
 import jp.remise.remiseapmdriver.Result.QRResult
 import jp.remise.remiseapmdriver.Result.QRTranCheckResult
+import jp.remise.remiseapmdriver.Result.ResultStatus
 import jp.remise.remiseapmdriver.setting.ConnectionSettingException
 import jp.remise.remiseapmdriver.setting.IConnectionSetting
 import jp.remise.remiseapmdriver.setting.SerialConnectionRS232Setting
 import jp.remise.remiseapmdriver.setting.SerialConnectionUSBSetting
 import jp.remise.remiseapmdriver.setting.TcpConnectionSetting
+import jp.remise.remiseapmdriversample.databinding.ActivityProcessBinding
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.Calendar
@@ -64,12 +69,13 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
     /**
      * 決済処理方法
      */
-   private lateinit var printerSettings: PrinterSettings
-
+    private lateinit var printerSettings: PrinterSettings
+    private lateinit var binding: ActivityProcessBinding
     var paymentType: PaymentType? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_process)
+        binding = ActivityProcessBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // 初期処理
         init()
@@ -82,6 +88,9 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
         // 処理実行
         exec(connectionSetting, parameter)
         printerSettings = intent.getParcelableExtra("PRINTER_SETTINGS")
+
+        binding.tvPrintingStatus.isVisible = true
+        binding.tvPaymentProcessing.isVisible = true
     }
 
     /**
@@ -103,8 +112,8 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
         cancelButton = findViewById(R.id.cancelButton)
 
         // ボタン制御
-        backButton!!.setEnabled(false)
-        cancelButton!!.setEnabled(true)
+        backButton!!.isEnabled = false
+        cancelButton!!.isEnabled = true
     }
 
     /**
@@ -346,7 +355,7 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun createLog(callTerminalResult: CallTerminalResult): LinkedHashMap<String, String> {
         val resultDatas = LinkedHashMap<String, String>()
-        resultDatas["Processing result"] =
+        resultDatas["proccessResult"] =
             callTerminalResult.status.toString() + "(" + callTerminalResult.message + ")"
         resultDatas["proccessStatus"] = callTerminalResult.proccessStatus
         resultDatas["appStatus"] = callTerminalResult.appStatus
@@ -506,8 +515,7 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
                 completeLogTextView!!.append(value)
                 completeLogTextView!!.append("\r\n")
             }
-            // TODO handler complete payment
-            printerOrder()
+            printerOrder(resultDatas["orderId"] ?: "")
         }
     }
 
@@ -649,29 +657,38 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
         return true
     }
 
-    private fun printerOrder() {
+    @SuppressLint("SetTextI18n")
+    private fun printerOrder(orderId: String) {
+        binding.tvPaymentProcessing.text = "Payment Successfully"
+        binding.tvPrintingStatus.isVisible = true
+        binding.tvPrintingStatus.text = "Order Printing..."
         Communication.sendCommands(
             this,
-            createSampleCommand(),
+            createSampleCommand(orderId),
             printerSettings.portName,
             printerSettings.portSettings,
             10000,
             30000,
             this
         ) {
-            // TODO show print result
+            if (it.result == Communication.Result.Success) {
+                binding.tvPrintingStatus.text = "Order Printed"
+            } else {
+                binding.tvPrintingStatus.text = "Order Printing: ${it.result.name}"
+            }
         }
     }
 
-    private fun createSampleCommand(): ByteArray {
+    private fun createSampleCommand(orderId: String): ByteArray {
         val emulation = ModelCapability.getEmulation(printerSettings.modelIndex)
         val builder = StarIoExt.createCommandBuilder(emulation)
         builder.beginDocument()
         builder.appendAlignment(ICommandBuilder.AlignmentPosition.Center)
-        builder.append("ORDER\n\n".toByteArray(Charset.defaultCharset()))
-        builder.append("--------------------------------\n".toByteArray(Charset.defaultCharset()))
-        builder.append("Amount                        ¥1\n".toByteArray(Charset.defaultCharset()))
-        builder.append("--------------------------------\n".toByteArray(Charset.defaultCharset()))
+        builder.append("ORDER\n".toByteArray())
+        builder.append("$orderId\n".toByteArray())
+        builder.append("--------------------------------\n".toByteArray())
+        builder.append("Amount                      ¥1\n".toByteArray())
+        builder.append("--------------------------------\n".toByteArray())
         builder.appendCutPaper(ICommandBuilder.CutPaperAction.PartialCutWithFeed)
         builder.endDocument()
         return builder.commands

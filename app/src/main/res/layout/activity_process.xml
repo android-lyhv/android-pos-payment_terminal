@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="100dp"
     tools:context=".ProcessActivity">
 
     <LinearLayout
@@ -119,7 +120,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="請求額  Amount" />
+            android:text="Billed Amount" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,4 +131,25 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_payment_processing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Processing...."
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_printing_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_printing_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Order Printing...." />
 </androidx.constraintlayout.widget.ConstraintLayout>
