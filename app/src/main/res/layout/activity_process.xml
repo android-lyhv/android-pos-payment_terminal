@@ -4,14 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:padding="100dp"
     tools:context=".ProcessActivity">
 
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/bg_self_payment" />
+
+        <include
+            android:id="@+id/step_view"
+            layout="@layout/step_view" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="100dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,12 +52,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/processingLogTitleTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="処理中ログ" />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -44,6 +66,12 @@
                         android:layout_height="wrap_content"
                         android:text="" />
                 </ScrollView>
+
+                <TextView
+                    android:id="@+id/processingLogTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="処理中ログ" />
             </LinearLayout>
 
             <LinearLayout
@@ -51,12 +79,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/completeLogTextTitleView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="最終処理結果" />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -71,6 +93,12 @@
                         android:layout_height="wrap_content"
                         android:text="" />
                 </ScrollView>
+
+                <TextView
+                    android:id="@+id/completeLogTextTitleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="最終処理結果" />
             </LinearLayout>
 
         </LinearLayout>
@@ -91,65 +119,11 @@
             <Button
                 android:id="@+id/cancelButton"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="決済中断" />
 
         </LinearLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/bg_self_payment" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Billed Amount" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="¥1"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_payment_processing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Payment Processing...."
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_printing_status"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_printing_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Order Printing...." />
 </androidx.constraintlayout.widget.ConstraintLayout>

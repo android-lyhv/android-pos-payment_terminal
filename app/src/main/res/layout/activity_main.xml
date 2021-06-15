@@ -4,8 +4,82 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:padding="10dp"
     tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btn_payment"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:backgroundTint="@color/colorButton"
+        android:fontFamily="@font/sf_pro_text_bold"
+        android:text="Pay"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@id/tv_device_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/sf_pro_text_medium"
+            android:layout_height="wrap_content"
+            android:text="Order"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
+
+        <include layout="@layout/order_item" />
+
+        <include layout="@layout/order_item_2" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:layout_marginBottom="10dp"
+            android:layout_height="0.5dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:textColor="@color/colorGray"
+                android:textSize="20dp" />
+
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥50"
+                android:fontFamily="@font/sf_pro_text_bold"
+                android:textColor="@android:color/white"
+                android:textSize="20dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/LinearLayoutMain"
@@ -28,6 +102,18 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/execButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_gravity="bottom"
+                        android:text="実行" />
+                </LinearLayout>
+
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -35,12 +121,6 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Offline flag:" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -66,17 +146,17 @@
                                     android:text="ON" />
                             </RadioGroup>
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Offline flag:" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Connection method：" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -113,17 +193,17 @@
                             </RadioGroup>
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Connection method：" />
+
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textViewIP"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="IP address: " />
 
                         <EditText
                             android:id="@+id/editTextIP"
@@ -134,17 +214,23 @@
                             android:inputType="textPersonName"
                             android:text="192.168.0.1" />
 
+                        <TextView
+                            android:id="@+id/textViewIP"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="IP address: " />
+
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <TextView
-                            android:id="@+id/textViewOrderID"
+                        <Button
+                            android:id="@+id/buttonOrderID"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Billing number:" />
+                            android:text="Numbering" />
 
                         <EditText
                             android:id="@+id/editTextOrderID"
@@ -154,23 +240,17 @@
                             android:inputType="textPersonName"
                             android:text="" />
 
-                        <Button
-                            android:id="@+id/buttonOrderID"
+                        <TextView
+                            android:id="@+id/textViewOrderID"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Numbering" />
+                            android:text="Billing number:" />
 
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textViewAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Amount of money：" />
 
                         <EditText
                             android:id="@+id/editTextAmount"
@@ -178,19 +258,19 @@
                             android:layout_height="wrap_content"
                             android:ems="10"
                             android:inputType="textPersonName"
-                            android:text="1" />
+                            android:text="50" />
+
+                        <TextView
+                            android:id="@+id/textViewAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Amount of money：" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-
-                        <TextView
-                            android:id="@+id/textViewMachineCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Settlement machine code (optional)" />
 
                         <EditText
                             android:id="@+id/editTextMachineCode"
@@ -199,17 +279,17 @@
                             android:ems="10"
                             android:inputType="textPersonName"
                             android:text="" />
+
+                        <TextView
+                            android:id="@+id/textViewMachineCode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Settlement machine code (optional)" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Transaction ID" />
 
                         <EditText
                             android:id="@+id/editTextTranID"
@@ -219,17 +299,17 @@
                             android:enabled="false"
                             android:inputType="textPersonName"
                             android:text="" />
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Transaction ID" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Transaction ID to be canceled" />
 
                         <EditText
                             android:id="@+id/editTextCanTranID"
@@ -239,17 +319,17 @@
                             android:enabled="false"
                             android:inputType="textPersonName"
                             android:text="" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Transaction ID to be canceled" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Job ID" />
 
                         <EditText
                             android:id="@+id/editTextJobID"
@@ -259,17 +339,23 @@
                             android:enabled="false"
                             android:inputType="textPersonName"
                             android:text="" />
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Job ID" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <TextView
-                            android:id="@+id/textViewUID"
+                        <Button
+                            android:id="@+id/buttonUID"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="UID" />
+                            android:text="採番" />
 
                         <EditText
                             android:id="@+id/editTextUID"
@@ -279,25 +365,13 @@
                             android:inputType="textPersonName"
                             android:text="" />
 
-                        <Button
-                            android:id="@+id/buttonUID"
+                        <TextView
+                            android:id="@+id/textViewUID"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="採番" />
+                            android:text="UID" />
                     </TableRow>
                 </TableLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
-                        android:id="@+id/execButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_gravity="bottom"
-                        android:text="実行" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -313,12 +387,6 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView7"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="支払方法/状態確認：" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -445,17 +513,17 @@
                             </RadioGroup>
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="支払方法/状態確認：" />
+
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Processing category " />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -493,6 +561,12 @@
                                     android:text="CHECK（有効性判定）" />
                             </RadioGroup>
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Processing category " />
                     </TableRow>
                 </TableLayout>
 
@@ -502,51 +576,16 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Billed Amount" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="¥1"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/tv_device_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
+        android:fontFamily="@font/sf_pro_text_light"
+        android:textColor="@color/colorGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Connected: Printer 2" />
-
-    <Button
-        android:id="@+id/btn_payment"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:text="Pay"
-        app:layout_constraintBottom_toTopOf="@id/tv_device_info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
