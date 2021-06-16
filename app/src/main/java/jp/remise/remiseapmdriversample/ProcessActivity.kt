@@ -15,6 +15,9 @@ import androidx.core.view.isVisible
 import com.hoho.android.usbserial.driver.UsbSerialDriver
 import com.starmicronics.starioextension.ICommandBuilder
 import com.starmicronics.starioextension.StarIoExt
+import java.io.IOException
+import java.util.Calendar
+import java.util.LinkedHashMap
 import jp.remise.remiseapmdriver.ApmDriver
 import jp.remise.remiseapmdriver.ApmDriverClientListener
 import jp.remise.remiseapmdriver.Connection.TerminalConnectionException
@@ -28,17 +31,12 @@ import jp.remise.remiseapmdriver.Result.CardTranCheckResult
 import jp.remise.remiseapmdriver.Result.EMoneyTranCheckResult
 import jp.remise.remiseapmdriver.Result.QRResult
 import jp.remise.remiseapmdriver.Result.QRTranCheckResult
-import jp.remise.remiseapmdriver.Result.ResultStatus
 import jp.remise.remiseapmdriver.setting.ConnectionSettingException
 import jp.remise.remiseapmdriver.setting.IConnectionSetting
 import jp.remise.remiseapmdriver.setting.SerialConnectionRS232Setting
 import jp.remise.remiseapmdriver.setting.SerialConnectionUSBSetting
 import jp.remise.remiseapmdriver.setting.TcpConnectionSetting
 import jp.remise.remiseapmdriversample.databinding.ActivityProcessBinding
-import java.io.IOException
-import java.nio.charset.Charset
-import java.util.Calendar
-import java.util.LinkedHashMap
 
 class ProcessActivity : AppCompatActivity(), View.OnClickListener {
     /**
@@ -69,6 +67,12 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
     /**
      * 決済処理方法
      */
+    enum class StatusProcess {
+        NONE,
+        PROCESSING,
+        SUCCESS
+    }
+
     private lateinit var printerSettings: PrinterSettings
     private lateinit var binding: ActivityProcessBinding
     var paymentType: PaymentType? = null
@@ -88,9 +92,8 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
         // 処理実行
         exec(connectionSetting, parameter)
         printerSettings = intent.getParcelableExtra("PRINTER_SETTINGS")
-
-        binding.tvPrintingStatus.isVisible = true
-        binding.tvPaymentProcessing.isVisible = true
+        showPaymentStatus(StatusProcess.PROCESSING)
+        showPrintStatus(StatusProcess.NONE)
     }
 
     /**
@@ -515,6 +518,7 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
                 completeLogTextView!!.append(value)
                 completeLogTextView!!.append("\r\n")
             }
+            showPaymentStatus(StatusProcess.SUCCESS)
             printerOrder(resultDatas["orderId"] ?: "")
         }
     }
@@ -641,8 +645,8 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
         // 全画面表示
         val decor = this.window.decorView
         decor.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 
     /**
@@ -659,9 +663,7 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun printerOrder(orderId: String) {
-        binding.tvPaymentProcessing.text = "Payment Successfully"
-        binding.tvPrintingStatus.isVisible = true
-        binding.tvPrintingStatus.text = "Order Printing..."
+        showPrintStatus(StatusProcess.PROCESSING)
         Communication.sendCommands(
             this,
             createSampleCommand(orderId),
@@ -672,9 +674,7 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
             this
         ) {
             if (it.result == Communication.Result.Success) {
-                binding.tvPrintingStatus.text = "Order Printed"
-            } else {
-                binding.tvPrintingStatus.text = "Order Printing: ${it.result.name}"
+                showPrintStatus(StatusProcess.SUCCESS)
             }
         }
     }
@@ -686,11 +686,66 @@ class ProcessActivity : AppCompatActivity(), View.OnClickListener {
         builder.appendAlignment(ICommandBuilder.AlignmentPosition.Center)
         builder.append("ORDER\n".toByteArray())
         builder.append("$orderId\n".toByteArray())
+        builder.appendAlignment(ICommandBuilder.AlignmentPosition.Left)
         builder.append("--------------------------------\n".toByteArray())
-        builder.append("Amount                      ¥1\n".toByteArray())
+        builder.append("Sansevieria                ¥10\n".toByteArray())
+        builder.append("x4\n".toByteArray())
+        builder.append("Gerbera                     ¥5\n".toByteArray())
+        builder.append("x2\n".toByteArray())
+        builder.append("--------------------------------\n".toByteArray())
+        builder.append("Total                      ¥50\n".toByteArray())
         builder.append("--------------------------------\n".toByteArray())
         builder.appendCutPaper(ICommandBuilder.CutPaperAction.PartialCutWithFeed)
         builder.endDocument()
         return builder.commands
+    }
+
+    private fun showPaymentStatus(statusProcess: StatusProcess) {
+        when (statusProcess) {
+            StatusProcess.NONE -> {
+                binding.stepView.paymentLoading.isGone = true
+                binding.stepView.paymentSuccess.isGone = true
+                binding.stepView.paymentNone.isVisible = true
+                binding.stepView.tvPaymentInfo.alpha = 0.5f
+            }
+            StatusProcess.PROCESSING -> {
+                binding.stepView.paymentLoading.isVisible = true
+                binding.stepView.paymentLoading.startRippleAnimation()
+                binding.stepView.paymentSuccess.isGone = true
+                binding.stepView.paymentNone.isGone = true
+                binding.stepView.tvPaymentInfo.alpha = 1f
+            }
+            StatusProcess.SUCCESS -> {
+                binding.stepView.paymentLoading.isGone = true
+                binding.stepView.paymentSuccess.isVisible = true
+                binding.stepView.paymentNone.isGone = true
+                binding.stepView.tvPaymentInfo.alpha = 0.5f
+            }
+        }
+    }
+
+    private fun showPrintStatus(statusProcess: StatusProcess) {
+        when (statusProcess) {
+            StatusProcess.NONE -> {
+                binding.stepView.printLoading.isGone = true
+                binding.stepView.printSuccess.isGone = true
+                binding.stepView.printNone.isVisible = true
+                binding.stepView.tvPrint.alpha = 0.5f
+            }
+            StatusProcess.PROCESSING -> {
+                binding.stepView.printLoading.isVisible = true
+                binding.stepView.printLoading.startRippleAnimation()
+                binding.stepView.printSuccess.isGone = true
+                binding.stepView.printSuccess.isGone = true
+                binding.stepView.tvPrint.alpha = 1f
+
+            }
+            StatusProcess.SUCCESS -> {
+                binding.stepView.printLoading.isGone = true
+                binding.stepView.printSuccess.isVisible = true
+                binding.stepView.printNone.isGone = true
+                binding.stepView.tvPrint.alpha = 0.5f
+            }
+        }
     }
 }

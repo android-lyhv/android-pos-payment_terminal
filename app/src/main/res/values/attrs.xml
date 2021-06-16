@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RippleView">
+        <attr name="rv_duration" format="integer" />
+        <attr name="rv_color" format="color" />
+        <attr name="rv_rippleCount" format="integer" />
+        <attr name="rv_radius" format="dimension" />
+    </declare-styleable>
+</resources>
